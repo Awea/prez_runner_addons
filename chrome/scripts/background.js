@@ -1,4 +1,4 @@
-var conn = new WebSocket("ws://192.168.0.113:8080/ws");
+var conn = new WebSocket("ws://localhost:8080/ws");
 var current_mode = 'prez';
 
 var tabs_query = function(callback){
@@ -66,6 +66,7 @@ var is_tab_mode = function(){
 }
 
 conn.onmessage = function(evt){
+  console.log(evt.data);
   switch(evt.data){
     case 'prez':
       current_mode = 'prez';
@@ -92,6 +93,14 @@ conn.onmessage = function(evt){
       }
       break;
     default:
+      console.log(evt.data);
+      try{
+        json_data = JSON.parse(evt.data)
+        chrome.tabs.create({url: json_data.link[0].href, active: false})
+      }
+      catch(e){
+        console.log(e);
+      }
       break;
   }
 }
